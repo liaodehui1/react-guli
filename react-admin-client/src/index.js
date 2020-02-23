@@ -2,6 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import memoryUtils from './utils/memoryUtils';
+import storageUtils from './utils/storageUtils';
+
+// 维持登录（刷新）、自动登录（关闭浏览器）
+// 将用户信息存入内存
+const user = storageUtils.getUser()
+if (user && user._id) {
+  memoryUtils.user = user
+}
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

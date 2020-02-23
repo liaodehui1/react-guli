@@ -3,11 +3,15 @@ import {
   Form,
   Input,
   Icon,
-  Button
+  Button,
+  message
 } from 'antd';
 import './login.less';
-import logo from './images/logo.png';
-// import { register } from '@api/index';
+import logo from '@/assets/images/logo.png';
+import { register } from '@/api/index';
+import memoryUtils from '@/utils/memoryUtils';
+import storageUtils from '@/utils/storageUtils';
+import { Redirect } from 'react-router-dom';
 
 const Item = Form.Item
 
@@ -24,9 +28,23 @@ class Login extends Component {
       if (!err) {
         // 校验成功
         const { username, password } = values
-        console.log('提交登录请求', username, password)
-        // let data = register(username, password)
-        // console.log(data)
+        // console.log('提交登录请求', username, password)
+        // await简化promise
+        try {
+          const res = await register(username, password)
+          // console.log('请求成功', res)
+          if (res.status === 0) { // 登录成功
+            message.success('登录成功')
+            memoryUtils.user = res.data
+            storageUtils.saveUser(res.data)
+            // 跳转到管理界面（replace 无需返回登录界面）
+            this.props.history.replace('/')
+          } else { // 登录失败
+            message.error(res.msg)
+          }
+        } catch (error) {
+          console.log('请求出问题了', error)
+        }
       } else {
         // 校验失败
         console.log('检验失败')
@@ -54,6 +72,9 @@ class Login extends Component {
   }
 
   render() {
+    if (memoryUtils.user && memoryUtils.user._id) {
+      return <Redirect to="/" />
+    }
     const { getFieldDecorator } = this.props.form
     return (
       <div className="login">

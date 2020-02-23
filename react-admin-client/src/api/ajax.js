@@ -7,7 +7,8 @@
 import axios from 'axios'
 import { message } from 'antd'
 
-axios.defaults.baseURL = 'http://localhost:5000'
+// 使用了代理服务器，无需
+// axios.defaults.baseURL = 'http://localhost:5000'
 
 export default function ajax(url, data = {}, method = 'GET') {
   return new Promise((resolve, reject) => {

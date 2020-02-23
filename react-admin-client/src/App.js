@@ -11,9 +11,9 @@ function App() {
     <BrowserRouter>
     {/* switch 只配一个 */}
       <Switch>
-        {/* exact 精准匹配 */}
-        <Route path="/" component={Admin} exact></Route>
+        {/* exact 精准匹配 嵌套路由不要加exact属性*/}
         <Route path="/login" component={Login}></Route>
+        <Route path="/" component={Admin} ></Route>
       </Switch>
     </BrowserRouter>
   );
