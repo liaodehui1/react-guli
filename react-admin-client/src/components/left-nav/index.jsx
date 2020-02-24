@@ -3,14 +3,57 @@ import './index.less';
 import logo from '@/assets/images/logo.png';
 import { Link, withRouter } from 'react-router-dom';
 import { Menu, Icon } from 'antd';
-import menuConfig from '@/config/menuConfig';
+import menuList from '@/config/menuConfig';
 
 const { SubMenu } = Menu;
 
-function getMenuNodes (menuConfig, path) {
-  let openKey = ''
-  function createMenuNodes (menuConfig, path) {
-    return menuConfig.reduce((pre, item) => {
+function getOpenKey(path) {
+  let openKey = []
+  const worker = (menuList) => {
+    let len = menuList.length
+    for (let i = 0; i < len; i++) {
+      let item = menuList[i]
+      if (item.key === path) {
+        return true;
+      }else if (item.children) {
+        if (worker(item.children)) {
+          openKey.push(item.key)
+          return true;
+        }
+      }
+    }
+  }
+  worker(menuList)
+  return openKey
+}
+
+class LeftNav extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectKey: '',
+      menuNodeList: this.getMenuNodes(menuList),
+      openKey: []
+    }
+  }
+
+  // 为第一次render准备数据
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // console.log('nextProps', nextProps)
+    const path = nextProps.location.pathname
+    if (path !== prevState.selectKey) {
+      // if (path.lastIndexOf('/') !== 0) 个人认为二级路由最好是 /一级路由/二级路由
+      return {
+        selectKey: path,
+        openKey: getOpenKey(path)
+      }
+    }
+    return null
+  }
+
+  // 获取菜单项
+  getMenuNodes = (menuList) => {
+    return menuList.reduce((pre, item) => {
       if (!item.children) {
         pre.push((
           <Menu.Item key={item.key}>
@@ -20,7 +63,7 @@ function getMenuNodes (menuConfig, path) {
             </Link>
           </Menu.Item>
         ))
-      }else {
+      } else {
         pre.push((
           <SubMenu
             key={item.key}
@@ -31,44 +74,17 @@ function getMenuNodes (menuConfig, path) {
               </span>
             }
           >
-            { createMenuNodes(item.children, path) }
+            {this.getMenuNodes(item.children)}
           </SubMenu>
         ))
-  
-        if (item.children.find(cItem => cItem.key === path)) { // 需要展开
-          openKey = item.key
-        }
       }
       return pre
     }, [])
   }
-  return {
-    menuNodeList: createMenuNodes(menuConfig, path),
-    openKey
-  }
-}
-
-class LeftNav extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      menuNodeList: [],
-      openKey: ''
-    }
-  }
-
-  // 为第一次render准备数据
-  static getDerivedStateFromProps (nextProps, prevState) {
-    // console.log(nextProps)
-    const path = nextProps.location.pathname
-    return getMenuNodes(menuConfig, path)
-  }
 
   render() {
-    const selectKey = this.props.location.pathname
-    const openKey = this.state.openKey
-    const menuNodeList = this.state.menuNodeList
-
+    const { selectKey, openKey, menuNodeList } = this.state
+    // console.log(selectKey, openKey)
     return (
       <div className="left-nav">
         <Link to="/" className="left-nav-header">
@@ -76,12 +92,12 @@ class LeftNav extends Component {
           <h1>硅谷后台</h1>
         </Link>
         <Menu
-          defaultSelectedKeys={[selectKey]}
-          defaultOpenKeys={[openKey]}
+          selectedKeys={[selectKey]}
+          defaultOpenKeys={openKey}
           mode="inline"
           theme="dark"
         >
-          { menuNodeList }
+          {menuNodeList}
         </Menu>
       </div>
     );
