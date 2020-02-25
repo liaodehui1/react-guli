@@ -37,6 +37,9 @@
 2. `componentDidMount`阶段通过`jsonp`获取天气信息；建立`dateUtils`格式化时间，开启时间模式，时间模式需要在`componentWillUnmount`阶段清除
 3. 封装a标签为公共组件`LinkButton`，退出登录使用antd的Modal组件进行提示，确认退出则删除内存中和客户端存储的user信息 
 
+## Category组件
+1. 整体使用antd的`Card`组件，分类列表使用`table`组件
+
 ## 知识点
 1. react img中的src不支持直接赋值相对路径，即不支持`<img src={./images/logo.png} alt="logo"/>`
 - import方法
@@ -66,3 +69,7 @@ import logo from './images/logo.png';
 一、浏览器端：通过script请求，并且带上函数参数  
 二、服务端：产生结果数据后，返回一个函数调用的代码，并将结果以函数实参传入  
 三、客户端：接收到结果则会调用函数
+
+5. setState
+- 异步更新state
+- 回调函数，在更新state且render()后执行

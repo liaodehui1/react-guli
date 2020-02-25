@@ -51,7 +51,7 @@ class Header extends Component {
 
   getWeather = async () => {
     const { dayPictureUrl, weather } = await reqWeather('北京')
-    // console.log(dayPictureUrl, weather)
+    console.log(dayPictureUrl, weather)
     this.setState({
       dayPictureUrl,
       weather

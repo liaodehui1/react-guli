@@ -31,3 +31,18 @@ export function reqWeather (city) {
     })
   })
 }
+
+// 获取一级/二级分类列表
+export function reqCategorys (parentId) {
+  return ajax('/manage/category/list', { parentId }, 'GET')
+}
+
+// 添加分类
+export function reqAddCategory ({ parentId, categoryName }) {
+  return ajax('/manage/category/add', { parentId, categoryName }, 'POST')
+}
+
+// 更新分类
+export function reqUpdateCategory ({ categoryId, categoryName }) {
+  return ajax('/manage/category/update', { categoryId, categoryName }, 'POST')
+}
