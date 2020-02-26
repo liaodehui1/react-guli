@@ -8,6 +8,7 @@ const { Option } = Select
 class AddForm extends Component {
   constructor(props) {
     super(props)
+    // 向父组件传参form
     props.setForm(this.props.form)
   }
   static propTypes = { 
@@ -52,7 +53,11 @@ class AddForm extends Component {
         <Item label="分类名称">
           {
             getFieldDecorator('categoryName', {
-              initialValue: ''
+              initialValue: '',
+              rules: [{
+                required: true,
+                message: '分类名称必须输入'
+              }]
             })(
               <Input placeholder="请输入分类名称"></Input>
             )

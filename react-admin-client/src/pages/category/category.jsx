@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Button, Icon, Table, message, Modal } from 'antd';
 import LinkButton from '@/components/link-button';
-import { reqCategorys, reqUpdateCategory } from '@/api';
+import { reqCategorys, reqAddCategory, reqUpdateCategory } from '@/api';
 import AddForm from './add-form';
 import UpdateForm from './update-form';
 
@@ -133,25 +133,59 @@ export default class Category extends Component {
 
   // 添加分类
   addCategory = () => {
+    this.form.validateFields(async (error, values) => {
+      if (!error) {
+        // 关闭对话框
+        this.setState({
+          showStatus: 0
+        })
+        // 收集数据，提交请求
+        // getFieldsValue 不传参则收集表单全部字段数据
+        const { parentId, categoryName } = this.form.getFieldsValue()
 
+        // 清空表单
+        this.form.resetFields()
+        const res = await reqAddCategory({ parentId, categoryName })
+
+        // 添加的分类是当前分类
+        if (res.status === 0) {
+          // 添加的分类属于当前坐在分类
+          if (parentId === this.state.parentId) {
+            this.getCategorys()
+            // 在二级分类时添加一级分类
+          } else if (parentId === '0') {
+            // 传入parentId，更新一级分类，但不显示一级分类，还是在二级分类
+            this.getCategorys(parentId)
+          }
+        }
+      }else {
+        message.error('表单数据校验有误')
+      }
+    })
   }
 
   // 更新分类
-  updateCategory = async () => {
-    // 1. 关闭对话框
-    this.setState({
-      showStatus: 0
+  updateCategory = () => {
+    this.form.validateFields(async (error, values) => {
+      if (!error) {
+        // 1. 关闭对话框
+        this.setState({
+          showStatus: 0
+        })
+        // 2. 请求更新
+        const categoryId = this.category._id
+        const { categoryName } = values
+        // 重置为初始状态 initialValue
+        this.form.resetFields()
+        const res = await reqUpdateCategory({ categoryId, categoryName })
+        if (res.status === 0) {
+          // 3. 更新页面
+          this.getCategorys()
+        }
+      }else {
+        message.error('表单数据校验有误')
+      }
     })
-    // 2. 请求更新
-    const categoryId = this.category._id
-    const categoryName = this.form.getFieldValue('categoryName')
-    // 重置为初始状态 initialValue
-    this.form.resetFields()
-    const res = await reqUpdateCategory({ categoryId, categoryName })
-    if(res.status === 0) {
-      // 3. 更新页面
-      this.getCategorys()
-    }
   }
 
   componentDidMount() {
@@ -159,13 +193,13 @@ export default class Category extends Component {
   }
 
   render() {
-    const { 
+    const {
       parentId,
       parentName,
       categorys,
       subCategorys,
       loading,
-      showStatus 
+      showStatus
     } = this.state
     const category = this.category || {}
     const title = parentId === '0' ? '一级分类列表' : (
@@ -182,7 +216,9 @@ export default class Category extends Component {
           columns={this.columns}
           loading={loading}
           bordered // 展示边框
+          // showQuickJumper G0 to; showSizeChanger 控制每页显示项数
           pagination={{ pageSize: 5, showQuickJumper: true, showSizeChanger: true }}
+          // 指定key
           rowKey="_id" />
         <Modal
           title="添加分类"
@@ -191,7 +227,7 @@ export default class Category extends Component {
           onCancel={this.handleCancel}
         >
           <AddForm parentId={parentId} categorys={categorys}
-            setForm={(form) => this.form = form}/>
+            setForm={(form) => this.form = form} />
         </Modal>
         <Modal
           title="更新分类"
@@ -200,7 +236,7 @@ export default class Category extends Component {
           onCancel={this.handleCancel}
         >
           <UpdateForm categoryName={category.name}
-            setForm={(form) => this.form = form}/>
+            setForm={(form) => this.form = form} />
         </Modal>
       </Card>
     );
