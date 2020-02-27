@@ -40,6 +40,8 @@
 ## Category组件
 1. 整体使用antd的`Card`组件，分类列表使用`table`组件
 
+## product/ProductAddUpdate组件
+1. form的item布局：为`Form`组件传入`formItemLayout`
 ## 知识点
 1. react img中的src不支持直接赋值相对路径，即不支持`<img src={./images/logo.png} alt="logo"/>`
 - import方法

@@ -46,3 +46,35 @@ export function reqAddCategory ({ parentId, categoryName }) {
 export function reqUpdateCategory ({ categoryId, categoryName }) {
   return ajax('/manage/category/update', { categoryId, categoryName }, 'POST')
 }
+
+// 获取商品分页列表
+export function reqProducts (pageNum, pageSize) {
+  return ajax('/manage/product/list', { pageNum, pageSize }, 'GET')
+}
+
+// 根据ID/Name搜索产品分类列表
+export function reqSearchProducts ({ pageSize, pageNum, searchType, searchName }) {
+  return ajax('/manage/product/search', {
+    pageNum,
+    pageSize,
+    [searchType]: searchName
+  })
+}
+
+// 添加/更新商品
+export function reqAddOrUpdateProduct (product) {
+  return ajax('/manage/product/' + (product._id ? 'update' : 'add'), product, 'POST')
+}
+
+// 对商品进行上架/下架处理
+export function reqUpdateProductStatus (productId, status) {
+  return ajax('/manage/product/updatStatus', {
+    productId,
+    status
+  }, 'POST')
+}
+
+// 删除图片
+export function reqDeleteImg (name) {
+  return ajax('/manage/img/delete', { name }, 'POST')
+}
