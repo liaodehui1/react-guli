@@ -68,7 +68,7 @@ export function reqAddOrUpdateProduct (product) {
 
 // 对商品进行上架/下架处理
 export function reqUpdateProductStatus (productId, status) {
-  return ajax('/manage/product/updatStatus', {
+  return ajax('/manage/product/updateStatus', {
     productId,
     status
   }, 'POST')

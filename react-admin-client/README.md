@@ -40,8 +40,13 @@
 ## Category组件
 1. 整体使用antd的`Card`组件，分类列表使用`table`组件
 
+## product/ProductHome组件
+1. 建立`utils/constants.js`存储变量
+2. 根据ID/Name搜索产品分类列表时，`[searchType]: searchName`一个接口函数完成两种查询操作
+
 ## product/ProductAddUpdate组件
 1. form的item布局：为`Form`组件传入`formItemLayout`
+
 ## 知识点
 1. react img中的src不支持直接赋值相对路径，即不支持`<img src={./images/logo.png} alt="logo"/>`
 - import方法
@@ -75,3 +80,7 @@ import logo from './images/logo.png';
 5. setState
 - 异步更新state
 - 回调函数，在更新state且render()后执行
+
+6. `antd`的columns中的`render`接收的参数
+- 一般第一个参数是，该列的值
+- 而当为actions操作列时，参数为该行的数据item

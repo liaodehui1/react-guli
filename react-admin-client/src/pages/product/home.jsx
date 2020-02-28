@@ -5,25 +5,25 @@ import {
   Input,
   Button,
   Icon,
-  Table
+  Table,
+  message
 } from 'antd'
 import LinkButton from '@/components/link-button';
+import { reqProducts, reqSearchProducts, reqUpdateProductStatus } from '@/api/index';
+import { PAGE_SIZE } from '@/utils/constants';
 
 const { Option } = Select
 
 export default class ProductHome extends Component {
   constructor(props) {
     super(props)
-    this.title = (
-      <span>
-        <Select value="1"  style={{width: 150}}>
-          <Option value="1">按名称搜索</Option>
-          <Option value="2">按描述搜索</Option>
-        </Select>
-        <Input placeholder="关键字" style={{width: 150, margin: '0 10px'}}/>
-        <Button type="primary">搜索</Button>
-      </span>
-    )
+    this.state = {
+      total: 0, // 商品总数
+      loading: false,
+      products: [],
+      searchType: 'productName', // 搜索类型字段
+      searchName: '' //搜索关键字
+    }
     this.extra = (
       <Button type="primary" onClick={() => {
         props.history.push('/product/addupdate')
@@ -50,11 +50,20 @@ export default class ProductHome extends Component {
         title: '状态',
         width: 100,
         dataIndex: 'status',
-        render: (status) => {
+        render: (status, product) => { // 1.在售， 2. 已下架
+          let btnText = '下架'
+          let statusText = '在售'
+          if (status === 2) {
+            btnText = '上架'
+            statusText = '已下架'
+          }
+          status = status === 1 ? 2 : 1 // 将更新成的status
           return (
             <span>
-              <Button type="primary">下架</Button>
-              <span>在售</span>
+              <Button type="primary" onClick={() => {
+                this.updateProductStatus(product._id, status)
+              }}>{btnText}</Button>
+              <span>{statusText}</span>
             </span>
           )
         }
@@ -76,19 +85,77 @@ export default class ProductHome extends Component {
         }
       }
     ]
-    this.state = {
-      products: []
+  }
+
+  componentDidMount() {
+    this.getProducts(1)
+  }
+
+  getProducts = async (pageNum) => {
+    this.pageNum = pageNum // 保存当前所在页面
+    this.setState({ loading: true })
+    const { searchType, searchName } = this.state
+    let res // 不能是const，const必须赋初值
+    if (searchName) { // 搜索分页请求
+      res = await reqSearchProducts({ pageNum, pageSize: PAGE_SIZE, searchName, searchType })
+    }else { // 一般分页请求
+      res = await reqProducts(pageNum, PAGE_SIZE)
+    }
+    if (res.status === 0) {
+      const { total, list } = res.data
+      this.setState({
+        total,
+        products: list
+      }, () => {
+        this.setState({ loading: false })
+      })
     }
   }
+
+  updateProductStatus = async (productId, status) => {
+    const res = await reqUpdateProductStatus(productId, status)
+    if (res.status === 0) {
+      message.success('更新状态成功!')
+      this.getProducts(this.pageNum || 1)
+    }
+  }
+  
   render() {
-    const { products, columns } = this.state
+    const { products, loading, total } = this.state
+    const title = (
+      <span>
+        <Select 
+          value={this.state.searchType}  
+          style={{width: 150}}
+          onChange={value => this.setState({ searchType: value })}
+        >
+          <Option value="productName">按名称搜索</Option>
+          <Option value="productDesc">按描述搜索</Option>
+        </Select>
+        <Input 
+          value={this.state.searchName}
+          placeholder="关键字" 
+          style={{width: 150, margin: '0 10px'}}
+          onChange={event => this.setState({ searchName: event.target.value })}
+        />
+        <Button type="primary" onClick={() => { this.getProducts(1) }}>搜索</Button>
+      </span>
+    )
+
     return (
-      <Card title={this.title} extra={this.extra}>
+      <Card title={title} extra={this.extra}>
         <Table
           bordered
           rowKey="_id"
+          loading={loading}
           dataSource={products}
-          columns={columns}
+          columns={this.columns}
+          pagination={{
+            defaultPageSize: PAGE_SIZE,
+            total,
+            showQuickJumper: true,
+            onChange: this.getProducts
+          }}
         />
       </Card>
     );
