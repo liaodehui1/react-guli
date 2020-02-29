@@ -47,6 +47,11 @@ export function reqUpdateCategory ({ categoryId, categoryName }) {
   return ajax('/manage/category/update', { categoryId, categoryName }, 'POST')
 }
 
+// 根据分类ID获取分类
+export function reqCategoryById (categoryId) {
+  return ajax('/manage/category/info', { categoryId }, 'GET')
+}
+
 // 获取商品分页列表
 export function reqProducts (pageNum, pageSize) {
   return ajax('/manage/product/list', { pageNum, pageSize }, 'GET')

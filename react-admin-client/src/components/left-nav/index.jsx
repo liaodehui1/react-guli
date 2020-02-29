@@ -40,9 +40,15 @@ class LeftNav extends Component {
   // 为第一次render准备数据
   static getDerivedStateFromProps(nextProps, prevState) {
     // console.log('nextProps', nextProps)
-    const path = nextProps.location.pathname
+    let path = nextProps.location.pathname
     if (path !== prevState.selectKey) {
-      // if (path.lastIndexOf('/') !== 0) 个人认为二级路由最好是 /一级路由/二级路由
+      // 解决进入product下子路由界面时不选中和打开问题
+      if (path.indexOf('/product') !== -1) { 
+        path = '/product'
+      }
+
+      // if (path.lastIndexOf('/') !== 0)
+      // 个人认为二级路由最好是 /一级路由/二级路由，当为无二级路由时省去获取openKey
       return {
         selectKey: path,
         openKey: getOpenKey(path)

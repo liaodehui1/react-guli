@@ -44,6 +44,9 @@
 1. 建立`utils/constants.js`存储变量
 2. 根据ID/Name搜索产品分类列表时，`[searchType]: searchName`一个接口函数完成两种查询操作
 
+## product/ProductDetail组件
+1. `antd`的`List.Item`中的`.ant-list-item`样式的`justify-content`默认为`space-between`,将其改为`flex-start`
+
 ## product/ProductAddUpdate组件
 1. form的item布局：为`Form`组件传入`formItemLayout`
 
@@ -67,7 +70,18 @@ import logo from './images/logo.png';
 - 声明式验证：直接使用别人定义好的验证规则进行验证
 - 自定义校验
 
-4. 嵌套路由（有子路由）不要加exact属性，会阻碍子路由匹配，而且`/`路由放到最后才不会阻碍`/login`
+4. 嵌套路由（有子路由）不要加exact属性，会阻碍子路由匹配，将`/`路由放到最后才不会阻碍`/login`
+```js
+// app.js
+// '/'进入首界面
+// '/home'重定向到'/home'，但是由于精准匹配，此时匹配不到了
+<Route path="/" component={Admin} exact></Route>
+<Route path="/login" component={Login}></Route>
+// admin.js
+...
+// 第一次'/'进入时没有匹配到的子路由，重定向
+<Redirect to='/home' />
+```
 
 5. jsonp
 - 只处理GET请求跨域问题
