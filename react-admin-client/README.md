@@ -49,6 +49,14 @@
 
 ## product/ProductAddUpdate组件
 1. form的item布局：为`Form`组件传入`formItemLayout`
+2. 通过`ref`获取子组件imgs和detail
+
+## product/PicturesWall组件
+1. 使用了antd的`upload`组件，选择图片后会自动上传图片到后台
+
+## product/RichTextEditor组件
+1. `yarn add react-draft-wysiwyg draftjs-to-html`安装依赖
+2. 设置`toolbar`属性，实现了图片上传与插入
 
 ## 知识点
 1. react img中的src不支持直接赋值相对路径，即不支持`<img src={./images/logo.png} alt="logo"/>`
