@@ -66,7 +66,7 @@ class ProductAddUpdate extends Component {
     }))
     // 二级分类商品
     const { isUpdate, product } = this
-    const { pCategoryId, categoryId } = product
+    const { pCategoryId } = product
     if (isUpdate && pCategoryId !== '0') {
       const subCategorys = await this.getCategorys(pCategoryId)
       const childOptions = subCategorys.map(c => ({
