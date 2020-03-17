@@ -15,7 +15,7 @@ function  getTitle (path) {
     let len = menuList.length
     for(let i = 0; i < len; i++) {
       let item = menuList[i]
-      if (item.key === path || path.includes(item.key)) {
+      if (item.key === path || path.includes(item.key)) { // 子路由也要由title
         title = item.title
         return;
       }else if (item.children) {

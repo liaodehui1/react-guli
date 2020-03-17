@@ -58,6 +58,10 @@
 1. `yarn add react-draft-wysiwyg draftjs-to-html`安装依赖
 2. 设置`toolbar`属性，实现了图片上传与插入
 
+## role/AuthForm组件
+1. 使用了antd的`Tree`树形控件
+2. 通过`getDerivedStateFromProps`判断是否需要需要重置state数据
+
 ## 知识点
 1. react img中的src不支持直接赋值相对路径，即不支持`<img src={./images/logo.png} alt="logo"/>`
 - import方法
@@ -102,6 +106,7 @@ import logo from './images/logo.png';
 5. setState
 - 异步更新state
 - 回调函数，在更新state且render()后执行
+- 支持函数作为参数，this.setState((state, props) => ({}))
 
 6. `antd`的columns中的`render`接收的参数
 - 一般第一个参数是，该列的值
