@@ -15,6 +15,16 @@ export function addUser (user) {
   return ajax('/manage/user/add', user, 'POST')
 }
 
+//添加/更新用户 
+export const reqAddOrUpdateUser = (user) => 
+  ajax('/manage/user/'+(user._id ? 'update' : 'add'), user, 'POST')
+
+//获取用户列表 
+export const reqUsers = () => ajax('/manage/user/list')
+
+//删除用户 
+export const reqDeleteUser = (userId) => ajax('/manage/user/delete', {userId}, 'POST')
+
 // 天气请求
 export function reqWeather (city) {
   const url = `http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`
