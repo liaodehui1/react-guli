@@ -102,6 +102,7 @@ export default class Role extends Component {
       this.setState({showAuth: false})
       message.success('更新角色成功')
       // 无需setState也能实现更新
+      // 但如果子组件有shouldComponentUpdate，由于role没变，子组件不会更新
       this.setState({
         roles: [...this.state.roles]
       })

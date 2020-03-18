@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Form, Input, Tree } from 'antd';
 import menuList from '@/config/menuConfig';
 
 const { Item } = Form;
 
-export default class AuthForm extends Component {
+// getDerivedStateFromProps控制了state是否更新，但shouldComponentUpdate默认返回true
+// PureComponent实现了shouldComponentUpdate浅比较state和props的功能
+export default class AuthForm extends PureComponent {
   constructor(props) {
     super(props)
     this.formItemLayout = {
@@ -50,7 +52,7 @@ export default class AuthForm extends Component {
 
   render() {
     const { role, checkedKeys } = this.state
-
+    console.log('auth')
     return (
       <div>
         <Item label="角色名称" {...this.formItemLayout}>
