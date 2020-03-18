@@ -98,6 +98,7 @@ class LeftNav extends Component {
     if (item.isPublic || memoryUtils.user.username === 'admin' || menus.includes(key)) {
       return true
     }
+    // 子item有权限
     if (item.children) {
       return !!item.children.find(child => menus.includes(child.key))
     }
