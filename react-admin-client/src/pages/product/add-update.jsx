@@ -144,7 +144,7 @@ class ProductAddUpdate extends Component {
     targetOption.loading = false
     // 更新二级列表
     this.setState({
-      options: [...this.state.options]
+      options: [...this.state.options] // 修改了内部属性
     })
   };
 
