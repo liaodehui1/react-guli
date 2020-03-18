@@ -80,7 +80,7 @@ import logo from './images/logo.png';
 
 3. [表单校验](https://ant.design/components/form-cn/#components-form-demo-normal-login)
 - 声明式验证：直接使用别人定义好的验证规则进行验证
-- 自定义校验
+- 自定义校验：validator
 
 4. 嵌套路由（有子路由）不要加exact属性，会阻碍子路由匹配，将`/`路由放到最后才不会阻碍`/login`
 ```js

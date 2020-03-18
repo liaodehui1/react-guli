@@ -8,6 +8,7 @@ import {
 } from 'antd';
 import { PAGE_SIZE } from '@/utils/constants';
 import memoryUtils from '@/utils/memoryUtils';
+import storageUtils from '@/utils/storageUtils';
 import { formateDate } from '@/utils/dateUtils';
 import { reqRoles, reqAddRole, reqUpdateRole } from '@/api';
 import AddForm from './add-form';
@@ -101,6 +102,12 @@ export default class Role extends Component {
     if (result.status === 0) {
       this.setState({showAuth: false})
       message.success('更新角色成功')
+      if (memoryUtils.user.role_id === role._id) {
+        memoryUtils.user = {}
+        storageUtils.removeUser()
+        this.props.history.replace('/login')
+        message.info('更改了当前用户角色权限，请重新登录')
+      }
       // 无需setState也能实现更新
       // 但如果子组件有shouldComponentUpdate，由于role没变，子组件不会更新
       this.setState({

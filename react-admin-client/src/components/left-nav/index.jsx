@@ -4,6 +4,7 @@ import logo from '@/assets/images/logo.png';
 import { Link, withRouter } from 'react-router-dom';
 import { Menu, Icon } from 'antd';
 import menuList from '@/config/menuConfig';
+import memoryUtils from '@/utils/memoryUtils';
 
 const { SubMenu } = Menu;
 
@@ -60,6 +61,7 @@ class LeftNav extends Component {
   // 获取菜单项
   getMenuNodes = (menuList) => {
     return menuList.reduce((pre, item) => {
+      if (!this.hasAuth(item)) return pre;
       if (!item.children) {
         pre.push((
           <Menu.Item key={item.key}>
@@ -86,6 +88,20 @@ class LeftNav extends Component {
       }
       return pre
     }, [])
+  }
+
+  hasAuth = (item) => {
+    const key = item.key
+    const menus = memoryUtils.user.role.menus
+
+    // isPublic公开的；有权限；管理员admin
+    if (item.isPublic || memoryUtils.user.username === 'admin' || menus.includes(key)) {
+      return true
+    }
+    if (item.children) {
+      return !!item.children.find(child => menus.includes(child.key))
+    }
+    return false
   }
 
   render() {
