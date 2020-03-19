@@ -7,14 +7,16 @@ import {
   message
 } from 'antd';
 import { PAGE_SIZE } from '@/utils/constants';
-import memoryUtils from '@/utils/memoryUtils';
-import storageUtils from '@/utils/storageUtils';
+// import memoryUtils from '@/utils/memoryUtils';
+// import storageUtils from '@/utils/storageUtils';
 import { formateDate } from '@/utils/dateUtils';
 import { reqRoles, reqAddRole, reqUpdateRole } from '@/api';
 import AddForm from './add-form';
 import AuthForm from './auth-form';
+import { connect } from 'react-redux';
+import { logout } from '@/redux/actions';
 
-export default class Role extends Component {
+class Role extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -97,16 +99,17 @@ export default class Role extends Component {
     const { role } = this.state // role 引用了state.roles中的一个role
     role.menus = this.auth.current.getMenus()
     role.auth_time = Date.now()
-    role.auth_name = memoryUtils.user.username
+    role.auth_name = this.props.user.username
     const result = await reqUpdateRole(role)
     if (result.status === 0) {
       this.setState({showAuth: false})
       message.success('更新角色成功')
-      if (memoryUtils.user.role_id === role._id) {
-        memoryUtils.user = {}
-        storageUtils.removeUser()
-        this.props.history.replace('/login')
+      if (this.props.user.role_id === role._id) {
+        // memoryUtils.user = {}
+        // storageUtils.removeUser()
+        // this.props.history.replace('/login')
         message.info('更改了当前用户角色权限，请重新登录')
+        return this.props.logout()
       }
       // 无需setState也能实现更新
       // 但如果子组件有shouldComponentUpdate，由于role没变，子组件不会更新
@@ -175,3 +178,8 @@ export default class Role extends Component {
     );
   }
 }
+
+export default connect(
+  (state) => ({ user: state.user }),
+  { logout }
+)(Role)

@@ -52,7 +52,7 @@ export default class AuthForm extends PureComponent {
 
   render() {
     const { role, checkedKeys } = this.state
-    console.log('auth')
+
     return (
       <div>
         <Item label="角色名称" {...this.formItemLayout}>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import memoryUtils from '@/utils/memoryUtils';
+// import memoryUtils from '@/utils/memoryUtils';
 import { Redirect, Switch, Route } from 'react-router-dom';
 import { Layout } from 'antd';
 import LeftNav from '@/components/left-nav';
@@ -13,15 +13,16 @@ import Bar from '../charts/bar';
 import Line from '../charts/line';
 import Pie from '../charts/pie';
 import Order from '../order/order';
+import { connect } from 'react-redux';
 
 const { Footer, Sider, Content } = Layout;
 
 /**
  * 管理的路由组件
  */
-export default class Admin extends Component {
+class Admin extends Component {
   render() {
-    const user = memoryUtils.user
+    const user = this.props.user
     if (!user._id) {
       return <Redirect to="/login" />
     }
@@ -55,3 +56,7 @@ export default class Admin extends Component {
     );
   }
 }
+
+export default connect(
+  (state) => ({ user: state.user })
+)(Admin)

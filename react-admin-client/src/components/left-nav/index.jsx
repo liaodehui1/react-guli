@@ -4,7 +4,9 @@ import logo from '@/assets/images/logo.png';
 import { Link, withRouter } from 'react-router-dom';
 import { Menu, Icon } from 'antd';
 import menuList from '@/config/menuConfig';
-import memoryUtils from '@/utils/memoryUtils';
+// import memoryUtils from '@/utils/memoryUtils';
+import { connect } from 'react-redux';
+import { setHeaderTitle } from '@/redux/actions';
 
 const { SubMenu } = Menu;
 
@@ -60,11 +62,15 @@ class LeftNav extends Component {
 
   // 获取菜单项
   getMenuNodes = (menuList) => {
+    const path = this.props.location.pathname
     return menuList.reduce((pre, item) => {
       if (!this.hasAuth(item)) return pre;
       if (!item.children) {
+        if (item.key === path || path.indexOf(item.key) !== -1) {
+          this.props.setHeaderTitle(item.title)
+        }
         pre.push((
-          <Menu.Item key={item.key}>
+          <Menu.Item key={item.key} onClick={() => this.props.setHeaderTitle(item.title)}>
             <Link to={item.key}>
               <Icon type={item.icon} />
               <span>{item.title}</span>
@@ -92,10 +98,9 @@ class LeftNav extends Component {
 
   hasAuth = (item) => {
     const key = item.key
-    const menus = memoryUtils.user.role.menus
-
+    const menus = this.props.user.role.menus
     // isPublic公开的；有权限；管理员admin
-    if (item.isPublic || memoryUtils.user.username === 'admin' || menus.includes(key)) {
+    if (item.isPublic || this.props.user.username === 'admin' || menus.includes(key)) {
       return true
     }
     // 子item有权限
@@ -108,6 +113,7 @@ class LeftNav extends Component {
   render() {
     const { selectKey, openKey, menuNodeList } = this.state
     // console.log(selectKey, openKey)
+
     return (
       <div className="left-nav">
         <Link to="/" className="left-nav-header">
@@ -128,4 +134,7 @@ class LeftNav extends Component {
 }
 
 // withRouter 高阶组件 传入location、history、match
-export default withRouter(LeftNav)
+export default connect(
+  (state) => ({ user: state.user }), // mapStateToProps只能为函数
+  { setHeaderTitle } // mapDispatchToProps 可以为对象或函数(dispatch) => ({})
+)(withRouter(LeftNav))

@@ -78,7 +78,8 @@ export default class ProductDetail extends Component {
               imgs.map(img => 
                 <img className="product-img" 
                   src={BASE_IMG_URL + img}  
-                  alt="img" 
+                  alt="img"
+                  key={img} 
                 />
               )
             }

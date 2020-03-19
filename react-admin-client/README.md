@@ -26,7 +26,7 @@
 ## LeftNav组件
 此组件使用了antd的`Menu`和`SubMenu`
 1. 设置menuConfig菜单配置表，`constructor`阶段`getMenuNodes`递归动态生成菜单，只创建一次
-2. 使用`withRouter`高阶组件，传入location、history、match属性
+2. 使用`withRouter`高阶组件，给不是通过路由切换过来的组件传入location、history、match属性
 - 设置`defaultOpenKeys`默认展开的子菜单
 - 设置`selectedKeys`当前选中的菜单项
 - 设置`defaultSelectedKeys`默认选中的菜单项 初次无效？

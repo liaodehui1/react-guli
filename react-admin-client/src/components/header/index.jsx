@@ -3,29 +3,32 @@ import './index.less';
 import { formateDate } from '@/utils/dateUtils';
 import { reqWeather } from '@/api/index';
 import memoryUtils from '@/utils/memoryUtils';
-import storageUtils from '@/utils/storageUtils';
+// import storageUtils from '@/utils/storageUtils';
 import { withRouter } from 'react-router-dom';
-import menuList from '@/config/menuConfig';
+// import menuList from '@/config/menuConfig';
 import { Modal } from 'antd';
 import LinkButton from '../link-button/index';
+import { connect } from 'react-redux';
+import { logout } from '@/redux/actions';
 
-function  getTitle (path) {
-  let title
-  const worker = (menuList) => {
-    let len = menuList.length
-    for(let i = 0; i < len; i++) {
-      let item = menuList[i]
-      if (item.key === path || path.includes(item.key)) { // 子路由也要由title
-        title = item.title
-        return;
-      }else if (item.children) {
-        worker(item.children)
-      }
-    }
-  }
-  worker(menuList)
-  return title
-}
+// 不使用redux时
+// function  getTitle (path) {
+//   let title
+//   const worker = (menuList) => {
+//     let len = menuList.length
+//     for(let i = 0; i < len; i++) {
+//       let item = menuList[i]
+//       if (item.key === path || path.includes(item.key)) { // 子路由也要由title
+//         title = item.title
+//         return;
+//       }else if (item.children) {
+//         worker(item.children)
+//       }
+//     }
+//   }
+//   worker(menuList)
+//   return title
+// }
 
 class Header extends Component {
   state = {
@@ -33,21 +36,22 @@ class Header extends Component {
     dayPictureUrl: '',
     weather: '',
     user: memoryUtils.user,
-    title: '',
+    // title: '',
     pathname: ''
   }
 
-  static getDerivedStateFromProps (nextProps, prevState) {
-    if (prevState.pathname !== nextProps.location.pathname) {
-      // console.log('更新title', prevState.pathname, nextProps.location.pathname)
-      const title =  getTitle(nextProps.location.pathname)
-      return {
-        title,
-        pathname: nextProps.location.pathname
-      }
-    }
-    return null
-  }
+  // 不使用redux时
+  // static getDerivedStateFromProps (nextProps, prevState) {
+  //   if (prevState.pathname !== nextProps.location.pathname) {
+  //     // console.log('更新title', prevState.pathname, nextProps.location.pathname)
+  //     const title =  getTitle(nextProps.location.pathname)
+  //     return {
+  //       title,
+  //       pathname: nextProps.location.pathname
+  //     }
+  //   }
+  //   return null
+  // }
 
   getWeather = async () => {
     const { dayPictureUrl, weather } = await reqWeather('北京')
@@ -72,10 +76,8 @@ class Header extends Component {
       content: '确定退出吗？',
       onOk: () => {
         // 移除登录状态
-        memoryUtils.user = {}
-        storageUtils.removeUser()
-        // 跳转到登录界面
-        this.props.history.replace('/login')
+        // memoryUtils.user = {}
+        this.props.logout() // 退出后admin拦截自动跳转
       },
       onCancel() {
         console.log('Cancel');
@@ -93,9 +95,9 @@ class Header extends Component {
   }
 
   render() {
-    const { sysTime, dayPictureUrl, weather, user, title } = this.state
+    const { sysTime, dayPictureUrl, weather, user } = this.state
     // const title = this.getTitle()
-
+    const title = this.props.headerTitle
     return (
       <div className="header">
         <div className="header-top">
@@ -115,4 +117,8 @@ class Header extends Component {
   }
 }
 
-export default withRouter(Header)
+// withRouter 给不是通过路由切换过来的组件传入location、history、match属性
+export default connect(
+  (state) => ({ headerTitle: state.headerTitle }),
+  { logout }
+)(withRouter(Header))

@@ -4,14 +4,16 @@ import {
   Input,
   Icon,
   Button,
-  message
+  // message
 } from 'antd';
 import './login.less';
 import logo from '@/assets/images/logo.png';
-import { register } from '@/api/index';
-import memoryUtils from '@/utils/memoryUtils';
-import storageUtils from '@/utils/storageUtils';
+// import { reqLogin } from '@/api/index';
+// import memoryUtils from '@/utils/memoryUtils';
+// import storageUtils from '@/utils/storageUtils';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { login } from '@/redux/actions';
 
 const Item = Form.Item
 
@@ -30,21 +32,7 @@ class Login extends Component {
         const { username, password } = values
         // console.log('提交登录请求', username, password)
         // await简化promise
-        try {
-          const res = await register(username, password)
-          // console.log('请求成功', res)
-          if (res.status === 0) { // 登录成功
-            message.success('登录成功')
-            memoryUtils.user = res.data
-            storageUtils.saveUser(res.data)
-            // 跳转到管理界面（replace 无需返回登录界面）
-            this.props.history.replace('/')
-          } else { // 登录失败
-            message.error(res.msg)
-          }
-        } catch (error) {
-          console.log('请求出问题了', error)
-        }
+        this.props.login(username, password)
       } else {
         // 校验失败
         console.log('检验失败')
@@ -72,9 +60,10 @@ class Login extends Component {
   }
 
   render() {
-    if (memoryUtils.user && memoryUtils.user._id) {
+    if (this.props.user && this.props.user._id) {
       return <Redirect to="/" />
     }
+    const errorMsg = this.props.user.errorMsg
     const { getFieldDecorator } = this.props.form
     return (
       <div className="login">
@@ -85,6 +74,7 @@ class Login extends Component {
           <h1>React项目：硅谷后台</h1>
         </header>
         <section className="login-content">
+          <div className={`error-msg ${errorMsg ? 'show' : ''}`}>{errorMsg}</div>
           <h3>用户登录</h3>
           <Form onSubmit={this.handleSubmit} className="login-form">
             <Item>
@@ -137,4 +127,7 @@ class Login extends Component {
   包装Form组件会生成一个新的组件：Form(Login)
   新的组件给Login传入了一个强大的对象 form
 */
-export default Form.create()(Login)
+export default connect(
+  (state) => ({user: state.user}),
+  { login }
+)(Form.create()(Login))

@@ -6,7 +6,7 @@ import jsonp from 'jsonp'
 import { message } from 'antd'
 
 // 登录
-export function register (username, password) {
+export function reqLogin (username, password) {
   return ajax('/login', { username, password }, 'POST')
 }
 
