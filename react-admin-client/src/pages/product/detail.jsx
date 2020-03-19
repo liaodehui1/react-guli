@@ -8,6 +8,7 @@ import LinkButton from '@/components/link-button';
 import './product.less';
 import { BASE_IMG_URL } from '@/utils/constants';
 import { reqCategoryById } from '@/api/index';
+import memoryUtils from '@/utils/memoryUtils';
 
 const { Item } = List
 
@@ -33,7 +34,7 @@ export default class ProductDetail extends Component {
   }
 
   getCategoryName = async () => {
-    const { categoryId, pCategoryId } = this.props.location.state
+    const { categoryId, pCategoryId } = memoryUtils.product
     let cName1, cName2
     if (pCategoryId === '0') {
       const res = await reqCategoryById(categoryId)
@@ -49,7 +50,7 @@ export default class ProductDetail extends Component {
   }
 
   render() {
-    const { name, imgs, desc, price, detail } = this.props.location.state
+    const { name, imgs, desc, price, detail } = memoryUtils.product
     const { cName1, cName2 } = this.state
     // console.log(detail)
 

@@ -12,6 +12,7 @@ import LinkButton from '@/components/link-button';
 import { reqCategorys, reqAddOrUpdateProduct } from '@/api/index';
 import PicturesWall from './picture-wall';
 import RichTextEditor from './rich-text-editor';
+import memoryUtils from '@/utils/memoryUtils';
 
 const { Item } = Form
 const { TextArea } = Input
@@ -19,7 +20,7 @@ const { TextArea } = Input
 class ProductAddUpdate extends Component {
   constructor(props) {
     super(props)
-    this.product = props.location.state || {}
+    this.product = memoryUtils.product || {}
     this.isUpdate = !!Object.keys(this.product).length
     this.title = (
       <span>
@@ -43,6 +44,10 @@ class ProductAddUpdate extends Component {
 
   componentDidMount() {
     this.getCategorys('0')
+  }
+
+  componentWillUnmount() {
+    memoryUtils.product = {}
   }
 
   getCategorys = async (parentId) => {
@@ -161,7 +166,7 @@ class ProductAddUpdate extends Component {
         categoryIds.push(pCategoryId, categoryId)
       }
     }
-    console.log(product)
+
     return (
       <Card title={this.title}>
         <Form {...this.formItemLayout}>

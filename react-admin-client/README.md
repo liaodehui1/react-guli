@@ -111,3 +111,8 @@ import logo from './images/logo.png';
 6. `antd`的columns中的`render`接收的参数
 - 一般第一个参数是，该列的值
 - 而当为actions操作列时，参数为该行的数据item
+
+7. HashRouter传参(字符串形式)
+```js
+this.props.history.push('/product/detail', product) // 无法传递product对象
+```

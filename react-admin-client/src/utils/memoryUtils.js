@@ -3,5 +3,6 @@
 */
 
 export default {
-  user: {}
+  user: {},
+  product: {} // 传递的product对象
 }

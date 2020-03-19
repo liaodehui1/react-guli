@@ -13,6 +13,7 @@ import Bar from '../charts/bar';
 import Line from '../charts/line';
 import Pie from '../charts/pie';
 import Order from '../order/order';
+import NotFound from '../not-found/not-found';
 import { connect } from 'react-redux';
 
 const { Footer, Sider, Content } = Layout;
@@ -36,6 +37,7 @@ class Admin extends Component {
           <Content style={{ backgroundColor: '#fff', margin: 20}}>
             {/* 二级路由 */}
             <Switch>
+              <Redirect exact from="/" to="/home"/>
               <Route path='/home' component={Home} />
               <Route path='/category' component={Category} />
               <Route path='/product' component={Product} /> 
@@ -45,7 +47,7 @@ class Admin extends Component {
               <Route path='/charts/line' component={Line} />
               <Route path='/charts/pie' component={Pie} />
               <Route path='/order' component={Order} />
-              <Redirect to='/home' />
+              <Route path="*" component={NotFound} />
             </Switch>
           </Content>
           <Footer style={{ textAlign: 'center', color: '#ccc' }}>

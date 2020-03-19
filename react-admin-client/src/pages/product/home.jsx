@@ -11,6 +11,7 @@ import {
 import LinkButton from '@/components/link-button';
 import { reqProducts, reqSearchProducts, reqUpdateProductStatus } from '@/api/index';
 import { PAGE_SIZE } from '@/utils/constants';
+import memoryUtils from '@/utils/memoryUtils';
 
 const { Option } = Select
 
@@ -74,17 +75,23 @@ export default class ProductHome extends Component {
         render: (product) => {
           return (
             <span>
-              <LinkButton onClick={() => {
-                this.props.history.push('/product/detail', product)
-              }}>详情</LinkButton>
-              <LinkButton onClick={() => {
-                this.props.history.push('/product/addupdate', product)
-              }}>修改</LinkButton>
+              <LinkButton onClick={() => this.showDetail(product)}>详情</LinkButton>
+              <LinkButton onClick={() => this.showUpdate(product)}>修改</LinkButton>
             </span>
           )
         }
       }
     ]
+  }
+
+  showDetail = (product) => {
+    memoryUtils.product = product
+    this.props.history.push('/product/detail')
+  }
+
+  showUpdate = (product) => {
+    memoryUtils.product = product
+    this.props.history.push('/product/addupdate')
   }
 
   componentDidMount() {
