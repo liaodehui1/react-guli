@@ -142,7 +142,11 @@ export default class Role extends Component {
           pagination={{ pageSize: PAGE_SIZE}}
           // 指定key
           rowKey="_id"
-          rowSelection={{type: 'radio', selectedRowKeys: [role._id]}} // checkbox/radio
+          rowSelection={{
+            type: 'radio', // checkbox/radio
+            selectedRowKeys: [role._id],
+            onSelect: (role) => this.setState({ role })
+          }}
           onRow={this.onRow} // 处理点击事件
         />
         <Modal
