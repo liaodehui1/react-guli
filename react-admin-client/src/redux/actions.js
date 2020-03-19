@@ -18,8 +18,11 @@ export const showErrorMsg = (errorMsg) => ({ type: SHOW_ERROR_MSG, errorMsg })
 
 // 退出登录
 export const logout = () => {
-  storageUtils.removeUser()
-  return {type: RESET_USER }
+  return async dispatch => {
+    storageUtils.removeUser()
+    dispatch({type: RESET_USER })
+    dispatch(setHeaderTitle('首页'))
+  }
 }
 
 // 用户登录
