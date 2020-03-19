@@ -131,7 +131,7 @@ router.post('/manage/user/delete', (req, res) => {
 
 // 获取所有用户列表
 router.get('/manage/user/list', (req, res) => {
-  UserModel.find({username: {'$ne': 'admin'}})
+  UserModel.find({username: {'$ne': 'admin'}}) // $ne 不等于
     .then(users => {
       RoleModel.find().then(roles => {
         res.send({status: 0, data: {users, roles}})
