@@ -116,3 +116,14 @@ import logo from './images/logo.png';
 ```js
 this.props.history.push('/product/detail', product) // 无法传递product对象
 ```
+
+8. 打包后跨域问题
+- 后端配置解决跨域
+- 客户端打包后生成的文件放到后台public目录下
+- nginx代理
+
+9. BrowserRouter问题 
+当访问了`127.0.0.1:5000/home`后刷新浏览器，将会去请求后台的`/home`，却找不到出现404问题
+而HashRouter不会携带`#/home`请求后台，只会请求`/`  
+解决方案：后台处理未匹配的路由返回`public/index.html`，`index.html`里js会解析路由  
+注意：后台路由不要和前台路由重合，否则请求前台页面会返回后台数据
